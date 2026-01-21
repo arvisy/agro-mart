@@ -21,7 +21,7 @@ BEGIN
 END$$;
 
 -- 
-CREATE TABLE IF NOT EXISTS user (
+CREATE TABLE IF NOT EXISTS "user" (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   name VARCHAR(100) NOT NULL,
   role user_role NOT NULL,
@@ -35,7 +35,7 @@ CREATE TABLE IF NOT EXISTS product_category (
 );
 
 -- 
-CREATE TABLE IF NOT EXISTS product (
+CREATE TABLE IF NOT EXISTS "product" (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   category_id INT NOT NULL,
   name VARCHAR(150) NOT NULL,
@@ -44,11 +44,11 @@ CREATE TABLE IF NOT EXISTS product (
   stock INT NOT NULL,
   created_at TIMESTAMPTZ DEFAULT now(),
 
-  CONSTRAINT fk_products_category FOREIGN KEY (category_id) REFERENCES product_categories(id)
+  CONSTRAINT fk_products_category FOREIGN KEY (category_id) REFERENCES product_category(id)
 );
 
 -- 
-CREATE TABLE IF NOT EXISTS order (
+CREATE TABLE IF NOT EXISTS "order" (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id UUID NOT NULL,
   status order_status NOT NULL,
@@ -56,28 +56,28 @@ CREATE TABLE IF NOT EXISTS order (
   idempotency_key VARCHAR(100) UNIQUE,
   created_at TIMESTAMPTZ DEFAULT now(),
 
-  CONSTRAINT fk_orders_user FOREIGN KEY (user_id) REFERENCES users(id)
+  CONSTRAINT fk_orders_user FOREIGN KEY (user_id) REFERENCES "user"(id)
 );
 
 -- 
-CREATE TABLE IF NOT EXISTS order_item (
+CREATE TABLE IF NOT EXISTS "order_item" (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   order_id UUID NOT NULL,
   product_id UUID NOT NULL,
   quantity INT NOT NULL,
   price NUMERIC(14,2) NOT NULL,
 
-  CONSTRAINT fk_order_items_order FOREIGN KEY (order_id) REFERENCES orders(id),
-  CONSTRAINT fk_order_items_product FOREIGN KEY (product_id) REFERENCES products(id)
+  CONSTRAINT fk_order_items_order FOREIGN KEY (order_id) REFERENCES "order"(id),
+  CONSTRAINT fk_order_items_product FOREIGN KEY (product_id) REFERENCES "product"(id)
 );
 
 -- 
-CREATE TABLE IF NOT EXISTS payment (
+CREATE TABLE IF NOT EXISTS "payment" (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   order_id UUID NOT NULL,
   method VARCHAR(50),
   status payment_status NOT NULL,
   paid_at TIMESTAMPTZ,
 
-  CONSTRAINT fk_payments_order FOREIGN KEY (order_id) REFERENCES orders(id)
+  CONSTRAINT fk_payments_order FOREIGN KEY (order_id) REFERENCES "order"(id)
 );

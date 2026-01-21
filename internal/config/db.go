@@ -9,34 +9,53 @@ import (
 	"gorm.io/gorm"
 )
 
+type PostgresConfig struct {
+	Host     string
+	User     string
+	Password string
+	Name     string
+	Port     string
+}
+
+func NewPostgresConfig() PostgresConfig {
+	return PostgresConfig{
+		Host:     os.Getenv(constant.DB_HOST_POSTGRES),
+		User:     os.Getenv(constant.DB_USER_POSTGRES),
+		Password: os.Getenv(constant.DB_PASSWORD_POSTGRES),
+		Name:     os.Getenv(constant.DB_NAME_POSTGRES),
+		Port:     os.Getenv(constant.DB_PORT_POSTGRES),
+	}
+}
+
+func (c PostgresConfig) PostgresDSN() string {
+	return fmt.Sprintf(
+		"host=%s user=%s password=%s dbname=%s port=%s sslmode=disable TimeZone=Asia/Jakarta",
+		c.Host,
+		c.User,
+		c.Password,
+		c.Name,
+		c.Port,
+	)
+}
+
+func (c PostgresConfig) MigrationDSN() string {
+	return fmt.Sprintf(
+		"postgres://%s:%s@%s:%s/%s?sslmode=disable",
+		c.User,
+		c.Password,
+		c.Host,
+		c.Port,
+		c.Name,
+	)
+}
+
 func InitPostgresDB() (*gorm.DB, error) {
-	dsn := getDSN()
+	cfg := NewPostgresConfig()
+	dsn := cfg.PostgresDSN()
+
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
 		return nil, err
 	}
-
 	return db, nil
-}
-
-func getDSN() string {
-	dbHost := os.Getenv(constant.DB_HOST_POSTGRES)
-	dbUser := os.Getenv(constant.DB_USER_POSTGRES)
-	dbPassword := os.Getenv(constant.DB_PASSWORD_POSTGRES)
-	dbName := os.Getenv(constant.DB_NAME_POSTGRES)
-	dbPort := os.Getenv(constant.DB_PORT_POSTGRES)
-	dbSslMode := os.Getenv(constant.DB_SSLMODE_POSTGRES)
-	dbTimeZone := os.Getenv(constant.DB_TIMEZONE_POSTGRES)
-
-	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=%s TimeZone=%s",
-		dbHost,
-		dbUser,
-		dbPassword,
-		dbName,
-		dbPort,
-		dbSslMode,
-		dbTimeZone,
-	)
-
-	return dsn
 }
