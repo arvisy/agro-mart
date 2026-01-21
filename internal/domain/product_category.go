@@ -1,4 +1,4 @@
-package productcategory
+package domain
 
 type ProductCategory struct {
 	Id   *int
