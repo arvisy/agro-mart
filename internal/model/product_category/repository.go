@@ -1,9 +1,8 @@
-package domain
+package productcategory
 
 type ProductCategory struct {
 	Id   *int
 	Name *string
-	Audit
 }
 
 func (ProductCategory) TableName() string {

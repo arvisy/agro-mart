@@ -1,4 +1,4 @@
--- migrate:up
+-- 
 DO $$
 BEGIN
   IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'user_role') THEN
@@ -20,20 +20,22 @@ BEGIN
   END IF;
 END$$;
 
-
-CREATE TABLE IF NOT EXISTS users (
+-- 
+CREATE TABLE IF NOT EXISTS user (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   name VARCHAR(100) NOT NULL,
   role user_role NOT NULL,
   created_at TIMESTAMPTZ DEFAULT now()
 );
 
-CREATE TABLE IF NOT EXISTS product_categories (
+-- 
+CREATE TABLE IF NOT EXISTS product_category (
   id SERIAL PRIMARY KEY,
   name VARCHAR(100) NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS products (
+-- 
+CREATE TABLE IF NOT EXISTS product (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   category_id INT NOT NULL,
   name VARCHAR(150) NOT NULL,
@@ -45,7 +47,8 @@ CREATE TABLE IF NOT EXISTS products (
   CONSTRAINT fk_products_category FOREIGN KEY (category_id) REFERENCES product_categories(id)
 );
 
-CREATE TABLE IF NOT EXISTS orders (
+-- 
+CREATE TABLE IF NOT EXISTS order (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id UUID NOT NULL,
   status order_status NOT NULL,
@@ -56,7 +59,8 @@ CREATE TABLE IF NOT EXISTS orders (
   CONSTRAINT fk_orders_user FOREIGN KEY (user_id) REFERENCES users(id)
 );
 
-CREATE TABLE IF NOT EXISTS order_items (
+-- 
+CREATE TABLE IF NOT EXISTS order_item (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   order_id UUID NOT NULL,
   product_id UUID NOT NULL,
@@ -67,8 +71,8 @@ CREATE TABLE IF NOT EXISTS order_items (
   CONSTRAINT fk_order_items_product FOREIGN KEY (product_id) REFERENCES products(id)
 );
 
-
-CREATE TABLE IF NOT EXISTS payments (
+-- 
+CREATE TABLE IF NOT EXISTS payment (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   order_id UUID NOT NULL,
   method VARCHAR(50),

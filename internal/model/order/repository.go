@@ -1,11 +1,10 @@
-package domain
+package order
 
 type Order struct {
 	Id          *string
-	UserId      *User
+	UserId      *string
 	Status      *string
 	TotalAmount *int
-	Audit
 }
 
 func (Order) TableName() string {

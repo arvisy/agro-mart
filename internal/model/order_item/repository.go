@@ -1,4 +1,4 @@
-package domain
+package orderitem
 
 type OrderItem struct {
 	Id        *string
