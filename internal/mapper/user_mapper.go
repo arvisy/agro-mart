@@ -5,9 +5,17 @@ import (
 	"agro-mart/internal/model"
 )
 
-func UserDomainToUserModel(d *domain.User) *model.User {
+func UserDomainToUserModel(user *domain.User) *model.User {
 	return &model.User{
-		Id:   d.Id,
-		Name: d.Name,
+		Id:   user.Id,
+		Name: user.Name,
+	}
+}
+
+func UserModelToUserDomain(user *model.User) *domain.User {
+	return &domain.User{
+		Id:   user.Id,
+		Name: user.Name,
+		Role: user.Role,
 	}
 }

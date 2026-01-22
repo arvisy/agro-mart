@@ -8,6 +8,7 @@ import (
 
 type UserService interface {
 	GetAllUser(id string) (*model.User, error)
+	UpsertUser(*model.User) error
 }
 
 type UserServiceImpl struct {
@@ -20,7 +21,18 @@ func (impl UserServiceImpl) GetAllUser(id string) (*model.User, error) {
 		return nil, err
 	}
 
-	userMapping := mapper.UserDomainToUserModel(user)
+	userModel := mapper.UserDomainToUserModel(user)
 
-	return userMapping, nil
+	return userModel, nil
+}
+
+func (impl UserServiceImpl) UpsertUser(user *model.User) error {
+	userDomain := mapper.UserModelToUserDomain(user)
+
+	err := impl.UserRepository.UpsertUser(userDomain)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

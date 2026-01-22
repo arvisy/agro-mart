@@ -6,5 +6,6 @@ func InitRoute(r *gin.Engine, c *Container) {
 	api := r.Group("api/v1")
 	{
 		api.GET("/user/:id", c.userController.GetUserById)
+		api.POST("/user", c.userController.UpsertUser)
 	}
 }

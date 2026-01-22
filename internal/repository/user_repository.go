@@ -4,10 +4,12 @@ import (
 	"agro-mart/internal/domain"
 
 	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 )
 
 type UserRepository interface {
 	GetUserById(id string) (*domain.User, error)
+	UpsertUser(user *domain.User) error
 }
 
 type UserRepositoryImpl struct {
@@ -24,4 +26,19 @@ func (impl UserRepositoryImpl) GetUserById(id string) (*domain.User, error) {
 	}
 
 	return &user, nil
+}
+
+func (impl UserRepositoryImpl) UpsertUser(user *domain.User) error {
+	q := impl.DB.Debug().Model(domain.User{})
+
+	tx := q.Clauses(clause.OnConflict{
+		Columns:   []clause.Column{{Name: "id"}},
+		DoUpdates: clause.AssignmentColumns([]string{"name", "role"}),
+	}).Create(user)
+
+	if tx.Error != nil {
+		return tx.Error
+	}
+
+	return nil
 }

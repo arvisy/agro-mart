@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"agro-mart/internal/model"
 	"agro-mart/internal/service"
 	"net/http"
 
@@ -32,4 +33,27 @@ func (impl UserController) GetUserById(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, res)
+}
+
+func (impl UserController) UpsertUser(c *gin.Context) {
+	var bodyReq model.User
+	err := c.ShouldBindJSON(&bodyReq)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": err.Error(),
+		})
+		return
+	}
+
+	err = impl.UserService.UpsertUser(&bodyReq)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"message": err.Error(),
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"message": "success",
+	})
 }

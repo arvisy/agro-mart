@@ -1,11 +1,14 @@
 package domain
 
-import "time"
+import (
+	"agro-mart/internal/enum"
+	"time"
+)
 
 type User struct {
-	Id        *string
+	Id        *string `gorm:"type:uuid;default:gen_random_uuid();primaryKey"`
 	Name      *string
-	Role      *string
+	Role      *enum.UserRole
 	CreatedAt *time.Time
 }
 
