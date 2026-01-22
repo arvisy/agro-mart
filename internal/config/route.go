@@ -7,5 +7,6 @@ func InitRoute(r *gin.Engine, c *Container) {
 	{
 		api.GET("/user/:id", c.userController.GetUserById)
 		api.POST("/user", c.userController.UpsertUser)
+		api.GET("/product", c.productController.GetAllProduct)
 	}
 }

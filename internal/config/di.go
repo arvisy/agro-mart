@@ -11,7 +11,8 @@ import (
 type Container struct {
 	DB *gorm.DB
 
-	userController controller.UserController
+	userController    controller.UserController
+	productController controller.ProductController
 }
 
 func NewContainer(db *gorm.DB) *Container {
@@ -25,6 +26,12 @@ func (c *Container) initController() {
 	c.userController = controller.UserController{
 		UserService: service.UserServiceImpl{
 			UserRepository: repository.UserRepositoryImpl{DB: c.DB},
+		},
+	}
+
+	c.productController = controller.ProductController{
+		ProductService: service.ProductServiceImpl{
+			ProductRepository: repository.ProductRepositoryImpl{DB: c.DB},
 		},
 	}
 }
