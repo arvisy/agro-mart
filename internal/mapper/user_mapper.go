@@ -5,15 +5,9 @@ import (
 	"agro-mart/internal/model"
 )
 
-func ListUserDomainToListUserModel(d []domain.User) []model.User {
-	res := []model.User{}
-
-	for _, v := range d {
-		res = append(res, model.User{
-			Id:   v.Id,
-			Name: v.Name,
-		})
+func UserDomainToUserModel(d *domain.User) *model.User {
+	return &model.User{
+		Id:   d.Id,
+		Name: d.Name,
 	}
-
-	return res
 }

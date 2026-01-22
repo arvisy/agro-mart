@@ -7,21 +7,21 @@ import (
 )
 
 type UserRepository interface {
-	GetAllUser() ([]domain.User, error)
+	GetUserById(id string) (*domain.User, error)
 }
 
 type UserRepositoryImpl struct {
 	DB *gorm.DB
 }
 
-func (impl UserRepositoryImpl) GetAllUser() ([]domain.User, error) {
+func (impl UserRepositoryImpl) GetUserById(id string) (*domain.User, error) {
 	q := impl.DB.Debug().Model(domain.User{})
 
-	users := []domain.User{}
-	tx := q.Find(users)
+	user := domain.User{}
+	tx := q.Where("id = ?", id).Find(&user)
 	if tx.Error != nil {
-		return []domain.User{}, tx.Error
+		return nil, tx.Error
 	}
 
-	return users, nil
+	return &user, nil
 }

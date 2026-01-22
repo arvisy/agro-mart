@@ -7,20 +7,20 @@ import (
 )
 
 type UserService interface {
-	GetAllUser() ([]model.User, error)
+	GetAllUser(id string) (*model.User, error)
 }
 
 type UserServiceImpl struct {
 	UserRepository repository.UserRepository
 }
 
-func (impl UserServiceImpl) GetAllUser() ([]model.User, error) {
-	users, err := impl.UserRepository.GetAllUser()
+func (impl UserServiceImpl) GetAllUser(id string) (*model.User, error) {
+	user, err := impl.UserRepository.GetUserById(id)
 	if err != nil {
-		return []model.User{}, err
+		return nil, err
 	}
 
-	userMapping := mapper.ListUserDomainToListUserModel(users)
+	userMapping := mapper.UserDomainToUserModel(user)
 
 	return userMapping, nil
 }
