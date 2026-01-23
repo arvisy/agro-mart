@@ -10,12 +10,15 @@ func ListProductDomainToListProductModel(d []domain.Product) []model.Product {
 
 	for _, v := range d {
 		products = append(products, model.Product{
-			Id:         v.Id,
-			Name:       v.Name,
-			CategoryId: v.CategoryId,
-			Unit:       v.Unit,
-			Price:      v.Price,
-			Stock:      v.Stock,
+			Id:    v.Id,
+			Name:  v.Name,
+			Unit:  v.Unit,
+			Price: v.Price,
+			Stock: v.Stock,
+			Category: &model.ProductCategory{
+				Id:   v.ProductCategory.Id,
+				Name: v.ProductCategory.Name,
+			},
 		})
 	}
 

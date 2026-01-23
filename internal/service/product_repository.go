@@ -8,6 +8,7 @@ import (
 
 type ProductService interface {
 	GetAllProduct() ([]model.Product, error)
+	UpsertProduct(*model.Product) error
 }
 
 type ProductServiceImpl struct {
@@ -23,4 +24,8 @@ func (impl ProductServiceImpl) GetAllProduct() ([]model.Product, error) {
 	productModel := mapper.ListProductDomainToListProductModel(product)
 
 	return productModel, nil
+}
+
+func (impl ProductServiceImpl) UpsertProduct(*model.Product) error {
+	panic("unimplemented")
 }

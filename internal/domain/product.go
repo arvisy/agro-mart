@@ -10,6 +10,8 @@ type Product struct {
 	Price      *float64
 	Stock      *int
 	CreatedAt  *time.Time
+
+	ProductCategory *ProductCategory `gorm:"foreignKey:CategoryId;references:Id"`
 }
 
 func (Product) TableName() string {
